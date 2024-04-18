@@ -42,13 +42,19 @@ def get_image_files(folder_path):
 
     return image_paths
 
+def dl_filepath(folder_path):
+    dl_filepath = os.path.normpath(os.path.join(folder_path, "TL"))
+    if not os.path.exists(dl_filepath):
+        os.mkdir(dl_filepath)
+    return(dl_filepath)
+
 print("Selecting Input Path...")
 folder_path = select_folder()
 print(folder_path)
 
 # Change this absolute path if you want to change the directory it downloads to
 #print("Selecting Output Path...")
-download_dir = "C:\\Users\\Ec_71\\Downloads"
+download_dir = dl_filepath(folder_path)
 
 # Get image files from the specified folder
 image_files = get_image_files(folder_path)
@@ -60,7 +66,10 @@ chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument(f"--download.default_directory={download_dir}")  # Set the download director
 
-service = Service(executable_path='D:\Auto-Cotrans\Auto-Cotrans\chromedriver.exe')
+# Get the current directory's file-path and join it with chromedriver.exe to get its filepath
+script_dir = os.path.dirname(os.path.realpath(__file__))
+chromedr_path = os.path.join(script_dir, "chromedriver.exe")
+service = Service(executable_path=chromedr_path)
 driver = webdriver.Chrome(service=service, options=chrome_options)
 
 # Downloading through --headless Chromium
