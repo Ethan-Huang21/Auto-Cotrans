@@ -42,11 +42,23 @@ def get_image_files(folder_path):
 
     return image_paths
 
+# Function to create a 'TL' folder if it doesn't exist, in the input filepath
 def dl_filepath(folder_path):
     dl_filepath = os.path.normpath(os.path.join(folder_path, "TL"))
     if not os.path.exists(dl_filepath):
         os.mkdir(dl_filepath)
     return(dl_filepath)
+
+# Function to wait until a downloaded file appears before continuing
+def wait_for_file_download(download_dir, timeout=60):
+    start_time = time.time()
+    filename = "translation-[object Object].png"
+    while True:
+        if filename in os.listdir(download_dir):
+            return
+        if time.time() - start_time > timeout:
+            raise TimeoutError("Download Timed Out")
+        time.sleep(1)
 
 print("Selecting Input Path...")
 folder_path = select_folder()
@@ -114,7 +126,7 @@ for ctr in range (0, len(image_files)):
         # Wait for the options to be displayed
         options_container = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, 'headlessui-listbox-options-6')))
         # Go either Default Detector or Comic Detector (add a condition) --> Currently Comic Detector Only
-        if True == False: 
+        if True: 
             detr_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="Default"]]')))
             detr_option.click()
         else:
@@ -165,10 +177,11 @@ for ctr in range (0, len(image_files)):
 
     # Download
     #print("Download Clicked")
-    dl_file = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="__nuxt"]/div[2]/div/div/label/div/div/div/button[1]')))
+    dl_file = WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="__nuxt"]/div[2]/div/div/label/div/div/div/button[1]')))
     dl_file.click()
-    time.sleep(0.2)
 
+    # Wait for Download to Finish
+    wait_for_file_download(download_dir)
     # Rename the File
     rename_file(ctr)
     
@@ -177,4 +190,3 @@ for ctr in range (0, len(image_files)):
     Next = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="__nuxt"]/div[2]/div/div/label/div/div/div/button[2]')))
     Next.click()
     time.sleep(0.2)
-time.sleep(1)
