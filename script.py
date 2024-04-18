@@ -60,7 +60,7 @@ chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument(f"--download.default_directory={download_dir}")  # Set the download director
 
-service = Service(executable_path='D:\\CPSC559Project\\Autotranslator\\chromedriver.exe')
+service = Service(executable_path='D:\Auto-Cotrans\Auto-Cotrans\chromedriver.exe')
 driver = webdriver.Chrome(service=service, options=chrome_options)
 
 # Downloading through --headless Chromium
