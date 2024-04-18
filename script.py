@@ -16,8 +16,12 @@ from tkinter import filedialog
 # Function to rename translated files
 def rename_file(ctr):
     # Rename
-    dl_filepath = download_dir + "\\translation-[object Object].png"
-    dl_newname = download_dir + "\\{}.png".format(ctr)
+    dl_filepath = os.path.join(download_dir, "translation-[object Object].png")
+    dl_newname = os.path.join(download_dir, f"{ctr}.png")
+    # If the path already exists, find a 'ctr' such that it doesn't exist.
+    while os.path.exists(dl_newname):
+        ctr += 1
+        dl_newname = os.path.join(download_dir, f"{ctr}.png")
     os.rename(dl_filepath, dl_newname)
     return (ctr)
 
@@ -59,6 +63,8 @@ def wait_for_file_download(download_dir, timeout=60):
         if time.time() - start_time > timeout:
             raise TimeoutError("Download Timed Out")
         time.sleep(1)
+
+fname = 0
 
 print("Selecting Input Path...")
 folder_path = select_folder()
@@ -126,7 +132,7 @@ for ctr in range (0, len(image_files)):
         # Wait for the options to be displayed
         options_container = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, 'headlessui-listbox-options-6')))
         # Go either Default Detector or Comic Detector (add a condition) --> Currently Comic Detector Only
-        if True: 
+        if True == False: 
             detr_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="Default"]]')))
             detr_option.click()
         else:
@@ -177,13 +183,13 @@ for ctr in range (0, len(image_files)):
 
     # Download
     #print("Download Clicked")
-    dl_file = WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="__nuxt"]/div[2]/div/div/label/div/div/div/button[1]')))
+    dl_file = WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="__nuxt"]/div[2]/div/div/label/div/div/div/button[1]')))
     dl_file.click()
 
     # Wait for Download to Finish
     wait_for_file_download(download_dir)
     # Rename the File
-    rename_file(ctr)
+    fname = rename_file(fname)
     
     # Return back to main page to translate the next image
     #print("Next Clicked")

@@ -1,5 +1,5 @@
 # Auto-Cotrans
-A Tool used to Translate folders of images by boostrapping [Cotrans](https://github.com/VoileLabs/cotrans) through Web Scraping via Selenium.
+A Tool used to Translate folders of images by bootstrapping [Cotrans](https://github.com/VoileLabs/cotrans) through Web Scraping via Selenium.
 
 Cotrans options are currently hardcoded, commented appropriately -- in case it has to be changed (whether by users, or by myself in a foreseeable future).
 
