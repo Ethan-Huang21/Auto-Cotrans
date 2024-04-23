@@ -136,7 +136,7 @@ with tqdm(total=num_files, desc="Translating Files...") as lbar:
             options_dres.click()
             time.sleep(0.2)
             # Wait for the options to be displayed
-            options_container = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, 'headlessui-listbox-options-3')))
+            options_container = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, 'headlessui-listbox-options-4')))
             # Select English
             # Find and Select the English option within the container
             res_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="2560px"]]')))
