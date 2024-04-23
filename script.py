@@ -124,21 +124,19 @@ with tqdm(total=num_files, desc="Translating Files...") as lbar:
             time.sleep(0.2)
             # Wait for the options to be displayed
             options_container = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, 'headlessui-listbox-options-2')))
-            # Select English
             # Find and Select the English option within the container
             english_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="English"]]')))
             english_option.click()
             time.sleep(0.3)
             # ----------------------------------------------------------------------------------
             # ----------------------------- Detection Resolution -------------------------------
-            # Open Language Options
+            # Open Detection Resolution Options
             options_dres = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="headlessui-listbox-button-3"]')))
             options_dres.click()
             time.sleep(0.2)
             # Wait for the options to be displayed
             options_container = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, 'headlessui-listbox-options-4')))
-            # Select English
-            # Find and Select the English option within the container
+            # Find and Select 2560px option within the container
             res_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="2560px"]]')))
             res_option.click()
             time.sleep(0.3)
@@ -176,7 +174,7 @@ with tqdm(total=num_files, desc="Translating Files...") as lbar:
             time.sleep(0.3)
             # ----------------------------------------------------------------------------------
             # ----------------------------- Translator Selection -------------------------------
-            # Open Text Direction Settings
+            # Open Translator Settings
             options_tl = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="headlessui-listbox-button-9"]')))
             options_tl.click()
             time.sleep(0.2)
