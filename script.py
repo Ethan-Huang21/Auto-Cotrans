@@ -130,7 +130,19 @@ with tqdm(total=num_files, desc="Translating Files...") as lbar:
             english_option.click()
             time.sleep(0.3)
             # ----------------------------------------------------------------------------------
-
+            # ----------------------------- Detection Resolution -------------------------------
+            # Open Language Options
+            options_dres = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="headlessui-listbox-button-3"]')))
+            options_dres.click()
+            time.sleep(0.2)
+            # Wait for the options to be displayed
+            options_container = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, 'headlessui-listbox-options-3')))
+            # Select English
+            # Find and Select the English option within the container
+            res_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="2560px"]]')))
+            res_option.click()
+            time.sleep(0.3)
+            # ----------------------------------------------------------------------------------
             # ----------------------------- Detector Selection ---------------------------------
             # Open Detector Settings
             options_detr = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="headlessui-listbox-button-5"]')))
@@ -147,7 +159,6 @@ with tqdm(total=num_files, desc="Translating Files...") as lbar:
                 detr_option.click()
             time.sleep(0.3)
             # ----------------------------------------------------------------------------------
-
             # ----------------------------- Direction Selection --------------------------------
             # Open Text Direction Settings
             options_dirn = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="headlessui-listbox-button-7"]')))
@@ -164,7 +175,6 @@ with tqdm(total=num_files, desc="Translating Files...") as lbar:
                 dir_option.click()
             time.sleep(0.3)
             # ----------------------------------------------------------------------------------
-
             # ----------------------------- Translator Selection -------------------------------
             # Open Text Direction Settings
             options_tl = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="headlessui-listbox-button-9"]')))
