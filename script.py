@@ -13,6 +13,11 @@ import glob
 import tkinter as tk
 from tkinter import filedialog
 
+# Loading Bar
+from tqdm import tqdm
+
+
+
 # Function to rename translated files
 def rename_file(ctr):
     # Rename
@@ -76,11 +81,12 @@ download_dir = dl_filepath(folder_path)
 
 # Get image files from the specified folder
 image_files = get_image_files(folder_path)
+num_files = len(image_files)
 
 # Configure Chrome options
 chrome_options = Options()
 chrome_options.add_argument("--headless") 
-chrome_options.add_argument("--no-sandbox")
+#chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument(f"--download.default_directory={download_dir}")  # Set the download director
 
@@ -101,98 +107,102 @@ command_result = driver.execute("send_command", params)
 driver.get('https://cotrans.touhou.ai//')
 driver.implicitly_wait(10)
 
-# Iterate through all the images
-for ctr in range (0, len(image_files)):
-    # Upload Image
-    upload_file = driver.find_element(By.XPATH, '//*[@id="__nuxt"]/div[2]/div/div/label/input')
-    upload_file.send_keys(repr(image_files[ctr])[1:-1])
+with tqdm(total=num_files, desc="Translating Files...") as lbar:
+    # Iterate through all the images
+    for ctr in range (0, len(image_files)):
+        # Upload Image
+        upload_file = driver.find_element(By.XPATH, '//*[@id="__nuxt"]/div[2]/div/div/label/input')
+        upload_file.send_keys(image_files[ctr])
 
-    # Cotrans saves the last utilized settings, so this only needs to be done once.
-    # Currently, no method to change from what's implemented but can be done easily.
-    if (ctr == 0):
-        # ----------------------------- Language Selection ---------------------------------
-        # Open Language Options
-        options_lang = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="headlessui-listbox-button-1"]')))
-        options_lang.click()
-        time.sleep(0.2)
-        # Wait for the options to be displayed
-        options_container = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, 'headlessui-listbox-options-2')))
-        # Select English
-        # Find and Select the English option within the container
-        english_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="English"]]')))
-        english_option.click()
+        # Cotrans saves the last utilized settings, so this only needs to be done once.
+        # Currently, no method to change from what's implemented but can be done easily.
+        if (ctr == 0):
+            # ----------------------------- Language Selection ---------------------------------
+            # Open Language Options
+            options_lang = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="headlessui-listbox-button-1"]')))
+            options_lang.click()
+            time.sleep(0.2)
+            # Wait for the options to be displayed
+            options_container = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, 'headlessui-listbox-options-2')))
+            # Select English
+            # Find and Select the English option within the container
+            english_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="English"]]')))
+            english_option.click()
+            time.sleep(0.3)
+            # ----------------------------------------------------------------------------------
+
+            # ----------------------------- Detector Selection ---------------------------------
+            # Open Detector Settings
+            options_detr = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="headlessui-listbox-button-5"]')))
+            options_detr.click()
+            time.sleep(0.2)
+            # Wait for the options to be displayed
+            options_container = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, 'headlessui-listbox-options-6')))
+            # Go either Default Detector or Comic Detector (add a condition) --> Currently Comic Detector Only
+            if True == False: 
+                detr_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="Default"]]')))
+                detr_option.click()
+            else:
+                detr_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="Comic Text Detector"]]')))
+                detr_option.click()
+            time.sleep(0.3)
+            # ----------------------------------------------------------------------------------
+
+            # ----------------------------- Direction Selection --------------------------------
+            # Open Text Direction Settings
+            options_dirn = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="headlessui-listbox-button-7"]')))
+            options_dirn.click()
+            time.sleep(0.2)
+            # Wait for the options to be displayed
+            options_container = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, 'headlessui-listbox-options-8')))
+            # Follow either Language or Image (add a condition) --> currently Follow Image Only
+            if True == False: 
+                dir_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="Follow language"]]')))
+                dir_option.click()
+            else:
+                dir_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="Follow image"]]')))
+                dir_option.click()
+            time.sleep(0.3)
+            # ----------------------------------------------------------------------------------
+
+            # ----------------------------- Translator Selection -------------------------------
+            # Open Text Direction Settings
+            options_tl = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="headlessui-listbox-button-9"]')))
+            options_tl.click()
+            time.sleep(0.2)
+            # Wait for the options to be displayed
+            options_container = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, 'headlessui-listbox-options-10')))
+            # Go either GPT-3.5 or DeepL (add a condition) --> Currently GPT-3.5 Only
+            if True: 
+                tl_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="GPT-3.5"]]')))
+                #tl_option = options_container.find_element(By.XPATH, './/li[.//span[text()="GPT-3.5"]]')
+                tl_option.click()
+            else:
+                tl_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="DeepL"]]')))
+                #tl_option = options_container.find_element(By.XPATH, './/li[.//span[text()="DeepL"]]')
+                tl_option.click()
+            # ----------------------------------------------------------------------------------
         time.sleep(0.3)
-        # ----------------------------------------------------------------------------------
+        # Translate
+        #print("Translate Clicked")
+        translate_file = driver.find_element(By.XPATH, '//*[@id="__nuxt"]/div[2]/div/div/label/div/div/div[2]/button')
+        translate_file.click()
 
-        # ----------------------------- Detector Selection ---------------------------------
-        # Open Detector Settings
-        options_detr = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="headlessui-listbox-button-5"]')))
-        options_detr.click()
+        # Download
+        #print("Download Clicked")
+        dl_file = WebDriverWait(driver, 360).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="__nuxt"]/div[2]/div/div/label/div/div/div/button[1]')))
+        dl_file.click()
+
+        # Wait for Download to Finish
+        wait_for_file_download(download_dir)
+        # Rename the File
+        fname = rename_file(fname)
+        
+        # Update Loading Bar
+        lbar.update(1)
+
+        # Return back to main page to translate the next image
+        #print("Next Clicked")
+        Next = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="__nuxt"]/div[2]/div/div/label/div/div/div/button[2]')))
+        Next.click()
         time.sleep(0.2)
-        # Wait for the options to be displayed
-        options_container = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, 'headlessui-listbox-options-6')))
-        # Go either Default Detector or Comic Detector (add a condition) --> Currently Comic Detector Only
-        if True == False: 
-            detr_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="Default"]]')))
-            detr_option.click()
-        else:
-            detr_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="Comic Text Detector"]]')))
-            detr_option.click()
-        time.sleep(0.3)
-        # ----------------------------------------------------------------------------------
-
-        # ----------------------------- Direction Selection --------------------------------
-        # Open Text Direction Settings
-        options_dirn = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="headlessui-listbox-button-7"]')))
-        options_dirn.click()
-        time.sleep(0.2)
-        # Wait for the options to be displayed
-        options_container = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, 'headlessui-listbox-options-8')))
-        # Follow either Language or Image (add a condition) --> currently Follow Image Only
-        if True == False: 
-            dir_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="Follow language"]]')))
-            dir_option.click()
-        else:
-            dir_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="Follow image"]]')))
-            dir_option.click()
-        time.sleep(0.3)
-        # ----------------------------------------------------------------------------------
-
-        # ----------------------------- Translator Selection -------------------------------
-        # Open Text Direction Settings
-        options_tl = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="headlessui-listbox-button-9"]')))
-        options_tl.click()
-        time.sleep(0.2)
-        # Wait for the options to be displayed
-        options_container = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, 'headlessui-listbox-options-10')))
-        # Go either GPT-3.5 or DeepL (add a condition) --> Currently GPT-3.5 Only
-        if True: 
-            tl_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="GPT-3.5"]]')))
-            #tl_option = options_container.find_element(By.XPATH, './/li[.//span[text()="GPT-3.5"]]')
-            tl_option.click()
-        else:
-            tl_option = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/li[.//span[text()="DeepL"]]')))
-            #tl_option = options_container.find_element(By.XPATH, './/li[.//span[text()="DeepL"]]')
-            tl_option.click()
-        # ----------------------------------------------------------------------------------
-    time.sleep(0.3)
-    # Translate
-    print("Translate Clicked")
-    translate_file = driver.find_element(By.XPATH, '//*[@id="__nuxt"]/div[2]/div/div/label/div/div/div[2]/button')
-    translate_file.click()
-
-    # Download
-    #print("Download Clicked")
-    dl_file = WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="__nuxt"]/div[2]/div/div/label/div/div/div/button[1]')))
-    dl_file.click()
-
-    # Wait for Download to Finish
-    wait_for_file_download(download_dir)
-    # Rename the File
-    fname = rename_file(fname)
-    
-    # Return back to main page to translate the next image
-    #print("Next Clicked")
-    Next = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="__nuxt"]/div[2]/div/div/label/div/div/div/button[2]')))
-    Next.click()
-    time.sleep(0.2)
