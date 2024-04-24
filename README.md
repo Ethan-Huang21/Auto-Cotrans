@@ -6,6 +6,7 @@ Cotrans options are currently hardcoded, commented appropriately -- in case it h
 ## Requirements:
  - Selenium (pip install selenium)
  - Webdriver_Manager (pip install webdriver-manager)
+ - Tqdm (pip install tqdm)
 
 ## Execution:
   - python script.py
