@@ -7,6 +7,7 @@ Cotrans options are currently hardcoded, commented appropriately -- in case it h
  - Selenium (pip install selenium)
  - Webdriver_Manager (pip install webdriver-manager)
  - Tqdm (pip install tqdm)
+ - Compatible Chromedriver (https://googlechromelabs.github.io/chrome-for-testing/)
 
 ## Execution:
   - python script.py

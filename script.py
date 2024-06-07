@@ -27,8 +27,19 @@ def rename_file(ctr):
     while os.path.exists(dl_newname):
         ctr += 1
         dl_newname = os.path.join(download_dir, f"{ctr}.png")
-    os.rename(dl_filepath, dl_newname)
-    return (ctr)
+
+    # Try to rename the file, retrying if a PermissionError occurs.
+    while True:
+        try:
+            os.rename(dl_filepath, dl_newname)
+            break
+        except PermissionError as e:
+            if e.winerror == 32:  # WinError 32: file in use
+                print(f"File {dl_filepath} is in use. Retrying in 1 second...")
+                time.sleep(1)
+            else:
+                raise
+    return ctr
 
 # Function to Select Translation Folder: returns its path
 def select_folder():
