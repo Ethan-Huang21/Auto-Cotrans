@@ -55,7 +55,7 @@ def get_image_files(folder_path):
     os.chdir(folder_path)
     
     # Get a sorted list (alphanumeric) of all image files within the folder
-    image_files = sorted(glob.glob("*.jpg") + glob.glob("*.jpeg") + glob.glob("*.png"))
+    image_files = sorted(glob.glob("*.jpg") + glob.glob("*.jpeg") + glob.glob("*.png") + glob.glob("*.webp"))
 
     # Join with the folder path to get image file paths
     image_paths = [os.path.normpath(os.path.join(folder_path, image_file)) for image_file in image_files]
@@ -96,7 +96,10 @@ num_files = len(image_files)
 
 # Configure Chrome options
 chrome_options = Options()
-chrome_options.add_argument("--headless") 
+chrome_options.add_argument("--headless")
+# Old Headles Retired --> Move Blank Window outside of screen
+# REF: https://stackoverflow.com/questions/78996364/chrome-129-headless-shows-blank-window
+chrome_options.add_argument("--window-position=-2400,-2400")
 #chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument(f"--download.default_directory={download_dir}")  # Set the download director
