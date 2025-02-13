@@ -5,6 +5,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+import chromedriver_autoinstaller
 import time
 
 # Filepaths
@@ -102,13 +103,10 @@ chrome_options.add_argument("--headless")
 chrome_options.add_argument("--window-position=-2400,-2400")
 #chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.add_argument(f"--download.default_directory={download_dir}")  # Set the download director
 
-# Get the current directory's file-path and join it with chromedriver.exe to get its filepath
-script_dir = os.path.dirname(os.path.realpath(__file__))
-chromedr_path = os.path.join(script_dir, "chromedriver.exe")
-service = Service(executable_path=chromedr_path)
-driver = webdriver.Chrome(service=service, options=chrome_options)
+# Ensure Chromedriver is up to latest version and install it to path
+chromedriver_autoinstaller.install()
+driver = webdriver.Chrome(options=chrome_options)
 
 # Downloading through --headless Chromium
 # Src: https://github.com/TheBrainFamily/chimpy/issues/108
